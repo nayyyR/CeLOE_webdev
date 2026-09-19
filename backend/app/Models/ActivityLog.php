@@ -13,8 +13,10 @@ class ActivityLog extends Model
     protected $fillable = [
         'ticket_id',
         'user_id',
-        'body',
-        'attachments',
+        'action',
+        'old_status',
+        'new_status',
+        'metadata',
     ];
 
     protected function casts(): array
@@ -22,7 +24,7 @@ class ActivityLog extends Model
         return [
             'ticket_id' => 'integer',
             'user_id' => 'integer',
-            'attachments' => 'array',
+            'metadata' => 'array',
         ];
     }
 }
