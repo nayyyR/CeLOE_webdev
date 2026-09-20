@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Web\Admin\TicketController as AdminTicketController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\Employee\TicketController as EmployeeTicketController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\SuperAdmin\DivisionController;
 use App\Http\Controllers\Web\SuperAdmin\PermissionController;
 use App\Http\Controllers\Web\SuperAdmin\RoleController;
+use App\Http\Controllers\Web\SuperAdmin\TicketController as SuperAdminTicketController;
 use App\Http\Controllers\Web\SuperAdmin\UserController;
 use App\Http\Controllers\Web\User\TicketController;
 use Illuminate\Support\Facades\Route;
@@ -44,8 +48,15 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
 
-// Authenticated: Logout
+// Authenticated: Logout + Profile
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+Route::middleware('auth')->name('profile.')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('update');
+    Route::get('/profile/password', [ProfileController::class, 'editPassword'])->name('password.edit');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -70,14 +81,27 @@ Route::prefix('user')->middleware(['auth', 'role.division', 'role:user'])->name(
     Route::put('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
-// Employee Dashboard
+// Employee Dashboard + Assigned Tickets
 Route::prefix('employee')->middleware(['auth', 'role.division', 'role:employee'])->name('employee.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // Assigned Tickets
+    Route::get('/tickets', [EmployeeTicketController::class, 'index'])->name('tickets.assigned');
+    Route::get('/tickets/{ticket}', [EmployeeTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/replies', [EmployeeTicketController::class, 'addThread'])->name('tickets.reply');
+    Route::put('/tickets/{ticket}/status', [EmployeeTicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
-// Admin Dashboard
+// Admin Dashboard + All Tickets
 Route::prefix('admin')->middleware(['auth', 'role.division', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // All Tickets
+    Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/assign', [AdminTicketController::class, 'assign'])->name('tickets.assign');
+    Route::post('/tickets/{ticket}/replies', [AdminTicketController::class, 'addThread'])->name('tickets.reply');
+    Route::put('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
 // Super Admin Dashboard + Management
@@ -110,6 +134,10 @@ Route::prefix('super-admin')->middleware(['auth', 'role.division', 'role:super a
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
 
-    // Placeholder: Tickets (built in later steps)
-    Route::get('/tickets', fn () => view('superadmin.placeholder', ['section' => 'Tickets']))->name('tickets.index');
+    // Tickets
+    Route::get('/tickets', [SuperAdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{ticket}', [SuperAdminTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/assign', [SuperAdminTicketController::class, 'assign'])->name('tickets.assign');
+    Route::post('/tickets/{ticket}/replies', [SuperAdminTicketController::class, 'addThread'])->name('tickets.reply');
+    Route::put('/tickets/{ticket}/status', [SuperAdminTicketController::class, 'updateStatus'])->name('tickets.status');
 });

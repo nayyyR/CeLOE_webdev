@@ -23,13 +23,17 @@
 
             {{-- User Info --}}
             <div class="flex items-center gap-x-4">
-                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-                    <span class="text-sm font-medium text-gray-600">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</span>
-                </div>
-                <div class="hidden sm:block">
-                    <p class="text-sm font-medium text-gray-900">{{ $user->name }}</p>
-                    <p class="text-xs text-gray-500">{{ $user->division->name ?? 'No division' }}</p>
-                </div>
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-x-3 rounded-lg px-2 py-1 -ml-2 hover:bg-gray-50 transition-colors" title="My Profile">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50 ring-1 ring-inset ring-indigo-700/10">
+                        <span class="text-sm font-medium text-indigo-600">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <p class="text-sm font-medium text-gray-900">{{ $user->name }}</p>
+                        <p class="text-xs text-gray-500">{{ $user->division->name ?? 'No division' }}</p>
+                    </div>
+                </a>
+
+                <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true"></div>
 
                 {{-- Logout --}}
                 <form method="POST" action="{{ route('logout') }}">

@@ -200,6 +200,10 @@ class TicketService
             return;
         }
 
+        if ($role === 'admin' || $role === 'super admin') {
+            return;
+        }
+
         abort(403);
     }
 
