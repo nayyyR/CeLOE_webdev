@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\SuperAdmin\RoleController;
 use App\Http\Controllers\Web\SuperAdmin\TicketController as SuperAdminTicketController;
 use App\Http\Controllers\Web\SuperAdmin\UserController;
 use App\Http\Controllers\Web\User\TicketController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Session-based (auth:web) routes for the Blade + Tailwind UI.
-| API endpoints (auth:sanctum) remain untouched in routes/api.php.
 |
 */
 
@@ -31,8 +31,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 
 // Root → redirect based on auth state
 Route::get('/', function () {
-    if (auth()->check()) {
-        $user = auth()->user();
+    if (Auth::check()) {
+        $user = Auth::user();
         $roleName = strtolower($user->role->name ?? '');
         $divisionName = strtolower($user->division->name ?? '');
 

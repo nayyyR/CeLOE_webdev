@@ -11,6 +11,7 @@ use App\Models\TicketThread;
 use App\Models\User;
 use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TicketController extends Controller
@@ -21,7 +22,7 @@ class TicketController extends Controller
 
     public function index(): View
     {
-        $tickets = Ticket::where('assigned_employee_id', auth()->id())
+        $tickets = Ticket::where('assigned_employee_id', Auth::id())
             ->with(['targetDivision', 'creator'])
             ->latest()
             ->paginate(10);
@@ -31,7 +32,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket): View
     {
-        abort_unless($ticket->assigned_employee_id === auth()->id(), 403);
+        abort_unless($ticket->assigned_employee_id === Auth::id(), 403);
 
         $ticket->load(['targetDivision', 'creator']);
 
@@ -64,12 +65,12 @@ class TicketController extends Controller
 
     public function addThread(Ticket $ticket, StoreTicketThreadRequest $request): RedirectResponse
     {
-        abort_unless($ticket->assigned_employee_id === auth()->id(), 403);
+        abort_unless($ticket->assigned_employee_id === Auth::id(), 403);
 
         $this->ticketService->addThread(
             $ticket,
             $request->validated(),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('employee.tickets.show', $ticket)
@@ -78,12 +79,12 @@ class TicketController extends Controller
 
     public function updateStatus(Ticket $ticket, UpdateTicketStatusRequest $request): RedirectResponse
     {
-        abort_unless($ticket->assigned_employee_id === auth()->id(), 403);
+        abort_unless($ticket->assigned_employee_id === Auth::id(), 403);
 
         $this->ticketService->updateStatus(
             $ticket,
             $request->validated('status'),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('employee.tickets.show', $ticket)

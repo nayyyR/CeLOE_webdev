@@ -13,6 +13,7 @@ use App\Models\TicketThread;
 use App\Models\User;
 use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TicketController extends Controller
@@ -23,7 +24,7 @@ class TicketController extends Controller
 
     public function index(): View
     {
-        $tickets = Ticket::where('created_by', auth()->id())
+        $tickets = Ticket::where('created_by', Auth::id())
             ->with(['targetDivision', 'assignedEmployee'])
             ->latest()
             ->paginate(10);
@@ -44,7 +45,7 @@ class TicketController extends Controller
     {
         $ticket = $this->ticketService->createTicket(
             $request->validated(),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('user.tickets.show', $ticket)
@@ -53,7 +54,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket): View
     {
-        abort_unless($ticket->created_by === auth()->id(), 403);
+        abort_unless($ticket->created_by === Auth::id(), 403);
 
         $ticket->load(['targetDivision', 'assignedEmployee', 'creator']);
 
@@ -86,12 +87,12 @@ class TicketController extends Controller
 
     public function addThread(Ticket $ticket, StoreTicketThreadRequest $request): RedirectResponse
     {
-        abort_unless($ticket->created_by === auth()->id(), 403);
+        abort_unless($ticket->created_by === Auth::id(), 403);
 
         $this->ticketService->addThread(
             $ticket,
             $request->validated(),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('user.tickets.show', $ticket)
@@ -100,12 +101,12 @@ class TicketController extends Controller
 
     public function updateStatus(Ticket $ticket, UpdateTicketStatusRequest $request): RedirectResponse
     {
-        abort_unless($ticket->created_by === auth()->id(), 403);
+        abort_unless($ticket->created_by === Auth::id(), 403);
 
         $this->ticketService->updateStatus(
             $ticket,
             $request->validated('status'),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('user.tickets.show', $ticket)

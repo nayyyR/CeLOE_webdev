@@ -13,6 +13,7 @@ use App\Models\TicketThread;
 use App\Models\User;
 use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TicketController extends Controller
@@ -76,7 +77,7 @@ class TicketController extends Controller
         $this->ticketService->assignTicket(
             $ticket,
             $request->validated('assigned_employee_id'),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('admin.tickets.show', $ticket)
@@ -88,7 +89,7 @@ class TicketController extends Controller
         $this->ticketService->addThread(
             $ticket,
             $request->validated(),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('admin.tickets.show', $ticket)
@@ -100,7 +101,7 @@ class TicketController extends Controller
         $this->ticketService->updateStatus(
             $ticket,
             $request->validated('status'),
-            auth()->user()
+            Auth::user()
         );
 
         return redirect()->route('admin.tickets.show', $ticket)

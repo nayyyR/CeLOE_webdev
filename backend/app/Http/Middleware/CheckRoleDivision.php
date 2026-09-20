@@ -2,15 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Traits\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckRoleDivision
 {
-    use ApiResponse;
-
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
@@ -27,7 +24,7 @@ class CheckRoleDivision
         };
 
         if (! $valid) {
-            return $this->errorResponse('Your role and division combination is not authorized.', 403);
+            abort(403, 'Your role and division combination is not authorized.');
         }
 
         return $next($request);

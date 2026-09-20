@@ -7,13 +7,14 @@ use App\Models\Division;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function __invoke(): View|RedirectResponse
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $viewName = match (strtolower($user->role->name)) {
             'user' => 'dashboard.user',
