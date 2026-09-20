@@ -75,8 +75,7 @@ All endpoints return a standardized JSON envelope via the ApiResponse trait.
 }
 `
 
-When errors is an object, keys are field names and values are arrays of validation error messages. When the error is not a validation error (e.g., 403 Forbidden), errors is 
-ull.
+When errors is an object, keys are field names and values are arrays of validation error messages. When the error is not a validation error (e.g., 403 Forbidden), errors is Null.
 
 ### Paginated Response (200)
 
@@ -114,7 +113,7 @@ ull.
 
 Every authenticated request passes through two gatekeeping middlewares:
 
-1. ** role.division** - Validates the role+division combination is one of the 4 allowed pairs.
+1. **role.division** - Validates the role+division combination is one of the 4 allowed pairs.
 2. **permission:{name}** - Validates the user's role has the required permission.
 
 | Role | Division | Allowed Access |
@@ -264,8 +263,7 @@ The dashboard field indicates which frontend view to render: "user", "employee",
 
 Revoke the current access token.
 
-**Middleware:** auth:sanctum, 
-ole.division
+**Middleware:** auth:sanctum, role.division
 
 **Request Body:** None
 
@@ -284,8 +282,7 @@ ole.division
 
 ### USER - Ticket Management
 
-All User endpoints require: auth:sanctum + 
-ole.division + permission:create_tickets
+All User endpoints require: auth:sanctum + role.division + permission:create_tickets
 
 ---
 
@@ -293,8 +290,7 @@ ole.division + permission:create_tickets
 
 List the authenticated user's own tickets (paginated, 10 per page).
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:create_tickets
+**Middleware:** auth:sanctum, role.division, permission:create_tickets
 
 **Query Parameters (optional):**
 
@@ -343,7 +339,7 @@ Create a new ticket. Automatically creates the first thread (using description a
 |-------|------|----------|------------|
 | subject | string | required | max:255 |
 | description | string | required | |
-| 	arget_division_id | integer | required | exists:divisions,id (excludes general) |
+| target_division_id | integer | required | exists:divisions,id (excludes general) |
 | attachments | file[] | nullable | Max 5 files, 2MB each |
 | attachments.* | file | if present | mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx |
 
@@ -374,12 +370,11 @@ Create a new ticket. Automatically creates the first thread (using description a
 
 View a single ticket. Users can only view their own tickets.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:create_tickets
+**Middleware:** auth:sanctum, role.division, permission:create_tickets
 
 **Route Parameter:** 	icket (integer, auto-resolved via route model binding)
 
-**Response (200):** Single ticket object with loaded creator, 	argetDivision, assignedEmployee.
+**Response (200):** Single ticket object with loaded creator, targetDivision, assignedEmployee.
 
 **Error Responses:**
 
@@ -394,8 +389,7 @@ ole.division, permission:create_tickets
 
 Add a reply/thread to a ticket.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:create_tickets
+**Middleware:** auth:sanctum, role.division, permission:create_tickets
 
 **Route Parameter:** 	icket (integer)
 
@@ -429,11 +423,9 @@ ole.division, permission:create_tickets
 
 ### PATCH /api/user/tickets/{ticket}/status
 
-Update ticket status. Users can only transition from 
-esolved to closed or in_progress.
+Update ticket status. Users can only transition from resolved to closed or in_progress.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:create_tickets, permission:confirm_resolution
+**Middleware:** auth:sanctum, role.division, permission:create_tickets, permission:confirm_resolution
 
 **Route Parameter:** 	icket (integer)
 
@@ -456,8 +448,7 @@ ole.division, permission:create_tickets, permission:confirm_resolution
 
 ### ADMIN - Ticket Management
 
-All Admin endpoints require: auth:sanctum + 
-ole.division + permission:view_all_tickets
+All Admin endpoints require: auth:sanctum + role.division + permission:view_all_tickets
 
 ---
 
@@ -465,8 +456,7 @@ ole.division + permission:view_all_tickets
 
 List ALL tickets in the system (paginated, 10 per page). No user scoping.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:view_all_tickets
+**Middleware:** auth:sanctum, role.division, permission:view_all_tickets
 
 **Query Parameters (optional):** search, status, division_id (same as User index)
 
@@ -478,8 +468,7 @@ ole.division, permission:view_all_tickets
 
 Assign a ticket to an employee. Changes ticket status to in_progress.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:view_all_tickets, permission:assign_tickets
+**Middleware:** auth:sanctum, role.division, permission:view_all_tickets, permission:assign_tickets
 
 **Route Parameter:** 	icket (integer)
 
@@ -492,7 +481,7 @@ ole.division, permission:view_all_tickets, permission:assign_tickets
 **Business Rules:**
 
 - Target user must have role Employee
-- Employee's division_id must match ticket's 	arget_division_id
+- Employee's division_id must match ticket's target_division_id
 - Ticket must be in open status
 
 **Response (200):**
@@ -523,8 +512,7 @@ ole.division, permission:view_all_tickets, permission:assign_tickets
 
 ### EMPLOYEE - Ticket Management
 
-All Employee endpoints require: auth:sanctum + 
-ole.division + permission:view_assigned_tickets
+All Employee endpoints require: auth:sanctum + role.division + permission:view_assigned_tickets
 
 ---
 
@@ -532,8 +520,7 @@ ole.division + permission:view_assigned_tickets
 
 List tickets assigned to the authenticated employee (paginated, 10 per page).
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:view_assigned_tickets
+**Middleware:** auth:sanctum, role.division, permission:view_assigned_tickets
 
 **Query Parameters (optional):** search, status, division_id
 
@@ -543,11 +530,9 @@ ole.division, permission:view_assigned_tickets
 
 ### PATCH /api/employee/tickets/{ticket}/status
 
-Resolve an assigned ticket. Employees can only transition from in_progress to 
-esolved.
+Resolve an assigned ticket. Employees can only transition from in_progress to resolved.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:view_assigned_tickets, permission:resolve_tickets
+**Middleware:** auth:sanctum, role.division, permission:view_assigned_tickets, permission:resolve_tickets
 
 **Route Parameter:** 	icket (integer)
 
@@ -557,8 +542,7 @@ ole.division, permission:view_assigned_tickets, permission:resolve_tickets
 |-------|------|----------|------------|
 | status | string | required | in:resolved,closed,in_progress |
 
-**Response (200):** Full ticket object with status: "resolved" and 
-esolved_at timestamp.
+**Response (200):** Full ticket object with status: "resolved" and resolved_at timestamp.
 
 **Error Responses:**
 
@@ -573,8 +557,7 @@ esolved_at timestamp.
 
 Add a reply/thread to an assigned ticket.
 
-**Middleware:** auth:sanctum, 
-ole.division, permission:view_assigned_tickets, permission:reply_tickets
+**Middleware:** auth:sanctum, role.division, permission:view_assigned_tickets, permission:reply_tickets
 
 **Route Parameter:** 	icket (integer)
 
@@ -586,15 +569,13 @@ ole.division, permission:view_assigned_tickets, permission:reply_tickets
 
 ### SUPER ADMIN - User Management
 
-All Super Admin endpoints require: auth:sanctum + 
-ole.division + permission:manage_users
+All Super Admin endpoints require: auth:sanctum + role.division + permission:manage_users
 
 ---
 
 ### GET /api/superadmin/users
 
-List all users (paginated, 10 per page) with loaded 
-ole and division.
+List all users (paginated, 10 per page) with loaded role and division.
 
 **Response (200):** Paginated user array.
 
@@ -621,17 +602,14 @@ Create a new user.
 
 | Field | Type | Required | Validation |
 |-------|------|----------|------------|
-| 
-ame | string | required | max:255 |
+| name | string | required | max:255 |
 | username | string | required | unique:users |
 | email | string | required | email, unique:users |
 | password | string | required | min:8 |
-| 
-ole_id | integer | required | exists:roles,id |
+| role_id | integer | required | exists:roles,id |
 | division_id | integer | required | exists:divisions,id |
 
-**Response (201):** Created user object with loaded 
-ole and division.
+**Response (201):** Created user object with loaded role and division.
 
 ---
 
@@ -639,8 +617,7 @@ ole and division.
 
 View a single user.
 
-**Response (200):** User object with loaded 
-ole and division.
+**Response (200):** User object with loaded role and division.
 
 ---
 
@@ -652,13 +629,11 @@ Update a user. All fields are optional (partial update).
 
 | Field | Type | Required | Validation |
 |-------|------|----------|------------|
-| 
-ame | string | sometimes | max:255 |
+| name | string | sometimes | max:255 |
 | username | string | sometimes | unique:users,username,{id} |
 | email | string | sometimes | email, unique:users,email,{id} |
 | password | string | sometimes | min:8 |
-| 
-ole_id | integer | sometimes | exists:roles,id |
+| role_id | integer | sometimes | exists:roles,id |
 | division_id | integer | sometimes | exists:divisions,id |
 
 **Response (200):** Updated user object with loaded 
@@ -830,8 +805,7 @@ Additional middleware: permission:manage_permissions
 
 ### GET /api/superadmin/permissions
 
-List all permissions with loaded 
-oles. **Not paginated.**
+List all permissions with loaded roles. **Not paginated.**
 
 **Response (200):**
 
@@ -858,8 +832,7 @@ Create a new permission.
 
 | Field | Type | Required | Validation |
 |-------|------|----------|------------|
-| 
-ame | string | required | max:255, unique:permissions |
+| name | string | required | max:255, unique:permissions |
 | description | string | nullable | |
 
 **Response (201):** Created permission object.
@@ -881,8 +854,7 @@ Update a permission.
 
 | Field | Type | Required | Validation |
 |-------|------|----------|------------|
-| 
-ame | string | required | max:255, unique:permissions,name,{id} |
+| name | string | required | max:255, unique:permissions,name,{id} |
 | description | string | nullable | |
 
 **Response (200):** Updated permission object.
@@ -946,8 +918,7 @@ Full CRUD on all tickets without status transition validation. Useful for admini
 
 List ALL tickets (paginated, 10 per page). No scoping.
 
-**Middleware:** uth:sanctum, 
-ole.division, permission:manage_users
+**Middleware:** auth:sanctum, role.division, permission:manage_users
 
 **Query Parameters (optional):** search, status, division_id
 
@@ -959,8 +930,7 @@ ole.division, permission:manage_users
 
 Create a ticket directly. Does NOT create a thread or activity log (unlike User ticket creation).
 
-**Middleware:** uth:sanctum, 
-ole.division, permission:manage_users
+**Middleware:** auth:sanctum, role.division, permission:manage_users
 
 **Request Body (JSON):**
 
@@ -971,8 +941,8 @@ ole.division, permission:manage_users
 | priority | string | required | in:low,medium,high,urgent |
 | status | string | required | in:open,in_progress,resolved,closed |
 | created_by | integer | required | exists:users,id |
-| 	arget_division_id | integer | required | exists:divisions,id |
-| ssigned_employee_id | integer | nullable | exists:users,id |
+| target_division_id | integer | required | exists:divisions,id |
+| assigned_employee_id | integer | nullable | exists:users,id |
 
 **Response (201):** Raw Ticket object.
 
@@ -996,8 +966,8 @@ Update a ticket. All fields are optional (partial update). No transition validat
 | description | string | sometimes | |
 | priority | string | sometimes | in:low,medium,high,urgent |
 | status | string | sometimes | in:open,in_progress,resolved,closed |
-| 	arget_division_id | integer | sometimes | exists:divisions,id |
-| ssigned_employee_id | integer | nullable | exists:users,id |
+| target_division_id | integer | sometimes | exists:divisions,id |
+| assigned_employee_id | integer | nullable | exists:users,id |
 
 **Response (200):** Updated Ticket object.
 
