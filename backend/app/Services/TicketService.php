@@ -6,52 +6,49 @@ use App\Models\ActivityLog;
 use App\Models\Ticket;
 use App\Models\TicketThread;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class TicketService
 {
     public function createTicket(array $data, User $user): Ticket
     {
-        return DB::transaction(function () use ($data, $user) {
-            $ticket = Ticket::create([
-                'ticket_number' => $this->generateTicketNumber(),
-                'subject' => $data['subject'],
-                'description' => $data['description'],
-                'priority' => 'medium',
-                'status' => 'open',
-                'created_by' => $user->id,
-                'target_division_id' => $data['target_division_id'],
-                'assigned_employee_id' => null,
-                'last_user_response_at' => now(),
-                'last_activity_at' => now(),
-            ]);
+        $ticket = Ticket::create([
+            'ticket_number' => $this->generateTicketNumber(),
+            'subject' => $data['subject'],
+            'description' => $data['description'],
+            'priority' => 'medium',
+            'status' => 'open',
+            'created_by' => $user->id,
+            'target_division_id' => $data['target_division_id'],
+            'assigned_employee_id' => null,
+            'last_user_response_at' => now(),
+            'last_activity_at' => now(),
+        ]);
 
-            $attachments = $this->storeAttachments(
-                $data['attachments'] ?? []
-            );
+        $attachments = $this->storeAttachments(
+            $data['attachments'] ?? []
+        );
 
-            TicketThread::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $user->id,
-                'body' => $data['description'],
-                'attachments' => $attachments,
-            ]);
+        TicketThread::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
+            'body' => $data['description'],
+            'attachments' => $attachments,
+        ]);
 
-            ActivityLog::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $user->id,
-                'action' => 'ticket_created',
-                'old_status' => null,
-                'new_status' => 'open',
-                'metadata' => [
-                    'subject' => $ticket->subject,
-                    'target_division_id' => $ticket->target_division_id,
-                ],
-            ]);
+        ActivityLog::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
+            'action' => 'ticket_created',
+            'old_status' => null,
+            'new_status' => 'open',
+            'metadata' => [
+                'subject' => $ticket->subject,
+                'target_division_id' => $ticket->target_division_id,
+            ],
+        ]);
 
-            return $ticket;
-        });
+        return $ticket;
     }
 
     public function assignTicket(Ticket $ticket, int $employeeId, User $assigner): Ticket
@@ -76,28 +73,26 @@ class TicketService
             ]);
         }
 
-        return DB::transaction(function () use ($ticket, $employee, $assigner) {
-            $oldStatus = $ticket->status;
+        $oldStatus = $ticket->status;
 
-            $ticket->update([
+        $ticket->update([
+            'assigned_employee_id' => $employee->id,
+            'status' => 'in_progress',
+            'last_activity_at' => now(),
+        ]);
+
+        ActivityLog::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $assigner->id,
+            'action' => 'ticket_assigned',
+            'old_status' => $oldStatus,
+            'new_status' => 'in_progress',
+            'metadata' => [
                 'assigned_employee_id' => $employee->id,
-                'status' => 'in_progress',
-                'last_activity_at' => now(),
-            ]);
+            ],
+        ]);
 
-            ActivityLog::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $assigner->id,
-                'action' => 'ticket_assigned',
-                'old_status' => $oldStatus,
-                'new_status' => 'in_progress',
-                'metadata' => [
-                    'assigned_employee_id' => $employee->id,
-                ],
-            ]);
-
-            return $ticket->fresh(['creator', 'targetDivision', 'assignedEmployee']);
-        });
+        return $ticket->fresh(['creator', 'targetDivision', 'assignedEmployee']);
     }
 
     public function updateStatus(Ticket $ticket, string $newStatus, User $user): Ticket
@@ -106,43 +101,41 @@ class TicketService
 
         $this->validateStatusTransition($ticket, $user, $role, $newStatus);
 
-        return DB::transaction(function () use ($ticket, $newStatus, $user, $role) {
-            $oldStatus = $ticket->status;
+        $oldStatus = $ticket->status;
 
-            $data = [
-                'status' => $newStatus,
-                'last_activity_at' => now(),
-            ];
+        $data = [
+            'status' => $newStatus,
+            'last_activity_at' => now(),
+        ];
 
-            if ($newStatus === 'resolved') {
-                $data['resolved_at'] = now();
-            }
+        if ($newStatus === 'resolved') {
+            $data['resolved_at'] = now();
+        }
 
-            if ($newStatus === 'closed') {
-                $data['closed_at'] = now();
-            }
+        if ($newStatus === 'closed') {
+            $data['closed_at'] = now();
+        }
 
-            if ($newStatus === 'in_progress') {
-                $data['resolved_at'] = null;
-                $data['closed_at'] = null;
-                $data['last_user_response_at'] = now();
-            }
+        if ($newStatus === 'in_progress') {
+            $data['resolved_at'] = null;
+            $data['closed_at'] = null;
+            $data['last_user_response_at'] = now();
+        }
 
-            $ticket->update($data);
+        $ticket->update($data);
 
-            ActivityLog::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $user->id,
-                'action' => 'status_changed',
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-                'metadata' => [
-                    'changed_by_role' => $role,
-                ],
-            ]);
+        ActivityLog::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
+            'action' => 'status_changed',
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'metadata' => [
+                'changed_by_role' => $role,
+            ],
+        ]);
 
-            return $ticket->fresh(['creator', 'targetDivision', 'assignedEmployee']);
-        });
+        return $ticket->fresh(['creator', 'targetDivision', 'assignedEmployee']);
     }
 
     public function addThread(Ticket $ticket, array $data, User $user): TicketThread

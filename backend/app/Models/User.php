@@ -62,4 +62,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ticket::class, 'assigned_employee_id');
     }
+
+    public function hasRole(string $roleName): bool
+    {
+        if (! $this->relationLoaded('role')) {
+            $this->load('role');
+        }
+
+        return $this->role && strtolower($this->role->name) === strtolower($roleName);
+    }
 }

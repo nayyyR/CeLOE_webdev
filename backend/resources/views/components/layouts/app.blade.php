@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Celoe' }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full font-sans antialiased">
@@ -15,13 +16,15 @@
  {{-- ============================================================ --}}
         <div class="min-h-full">
             {{-- Sidebar (desktop) --}}
-            <x-sidebar />
+            <div class="hidden lg:block">
+                <x-sidebar />
+            </div>
 
             {{-- Mobile sidebar overlay --}}
-            <div class="lg:hidden sidebar-mobile hidden fixed inset-0 z-50 bg-gray-900/80" onclick="this.classList.add('hidden')"></div>
+            <div id="sidebar-overlay" class="lg:hidden hidden fixed inset-0 z-40 bg-gray-900/80" onclick="document.getElementById('sidebar-mobile').classList.add('hidden'); this.classList.add('hidden')"></div>
 
             {{-- Mobile sidebar --}}
-            <div class="lg:hidden sidebar-mobile hidden fixed inset-y-0 left-0 z-50 w-64 bg-gray-900">
+            <div id="sidebar-mobile" class="lg:hidden hidden fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 overflow-y-auto">
                 <x-sidebar />
             </div>
 

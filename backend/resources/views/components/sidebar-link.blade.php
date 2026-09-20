@@ -1,7 +1,8 @@
-@props(['href' => '#', 'active' => false'])
+@props(['href' => '#', 'active' => false])
 
 @php
-    $classes = $active
+    $isActive = (bool) filter_var($active, FILTER_VALIDATE_BOOLEAN);
+    $classes = $isActive
         ? 'bg-gray-800 text-white'
         : 'text-gray-400 hover:bg-gray-800 hover:text-white';
 @endphp

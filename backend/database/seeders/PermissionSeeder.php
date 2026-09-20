@@ -23,8 +23,16 @@ class PermissionSeeder extends Seeder
                 'description' => 'Mengelola role pengguna.',
             ],
             [
+                'name' => 'manage_divisions',
+                'description' => 'Mengelola divisi organisasi.',
+            ],
+            [
                 'name' => 'manage_permissions',
                 'description' => 'Mengelola permission dan assignment permission ke role.',
+            ],
+            [
+                'name' => 'manage_tickets',
+                'description' => 'Mengelola seluruh tiket.',
             ],
             [
                 'name' => 'create_tickets',
@@ -91,6 +99,7 @@ class PermissionSeeder extends Seeder
 
         $admin->permissions()->sync(
             Permission::whereIn('name', [
+                'manage_users',
                 'view_all_tickets',
                 'assign_tickets',
                 'view_activity_logs',

@@ -4,7 +4,7 @@
     $currentRoute = request()->route()->getName();
 @endphp
 
-<aside class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col bg-gray-900">
+<aside class="flex flex-col h-full lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col bg-gray-900">
     <div class="flex h-16 items-center gap-3 px-6 border-b border-gray-800">
         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
             <span class="text-xs font-bold text-white">C</span>
@@ -19,10 +19,10 @@
                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg> Dashboard
                 </x-sidebar-link>
                 <li class="mt-4"><span class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Tickets</span></li>
-                <x-sidebar-link href="#" active="false">
+                <x-sidebar-link href="{{ route('user.tickets.index') }}" active="{{ in_array($currentRoute, ['user.tickets.index', 'user.tickets.show', 'user.tickets.reply', 'user.tickets.status']) }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" /></svg> My Tickets
                 </x-sidebar-link>
-                <x-sidebar-link href="#" active="false">
+                <x-sidebar-link href="{{ route('user.tickets.create') }}" active="{{ $currentRoute === 'user.tickets.create' }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg> Create Ticket
                 </x-sidebar-link>
             @endif
