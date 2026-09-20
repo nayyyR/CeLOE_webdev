@@ -35,7 +35,7 @@ class TicketFactory extends Factory
             ->value('id');
 
         return [
-            'ticket_number' => 'TKT-' . fake()->unique()->numerify('######'),
+            'ticket_number' => 'TKT-'.fake()->unique()->numerify('######'),
             'subject' => fake()->sentence(6),
             'description' => fake()->paragraph(),
             'priority' => fake()->randomElement([

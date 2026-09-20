@@ -1,0 +1,553 @@
+﻿{
+  "info": {
+    "name": "Celoe API",
+    "description": "Multi-Role Ticketing System - Backend API Collection\n\nAuthentication: Bearer Token via {{token}} variable.\n\nSet the {{base_url}} variable to http://localhost:8000/api before using.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "ticket_id",
+      "value": "1"
+    },
+    {
+      "key": "user_id",
+      "value": "1"
+    },
+    {
+      "key": "role_id",
+      "value": "1"
+    },
+    {
+      "key": "division_id",
+      "value": "1"
+    },
+    {
+      "key": "permission_id",
+      "value": "1"
+    }
+  ],
+  "item": [    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User - Tickets",
+      "item": [
+        {
+          "name": "List My Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/user/tickets?search=&status=&division_id=",
+              "host": ["{{base_url}}"],
+              "path": ["user", "tickets"],
+              "query": [
+                { "key": "search", "value": "", "description": "Filter by subject" },
+                { "key": "status", "value": "", "description": "Filter by status" },
+                { "key": "division_id", "value": "", "description": "Filter by division ID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Ticket",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "subject", "value": "Laptop tidak bisa menyala", "type": "text" },
+                { "key": "description", "value": "Laptop tiba-tiba mati setelah update Windows.", "type": "text" },
+                { "key": "target_division_id", "value": "2", "type": "text" },
+                { "key": "attachments", "type": "file", "src": "" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/user/tickets", "host": ["{{base_url}}"], "path": ["user", "tickets"] }
+          }
+        },
+        {
+          "name": "Get Ticket Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/user/tickets/{{ticket_id}}", "host": ["{{base_url}}"], "path": ["user", "tickets", "{{ticket_id}}"] }
+          }
+        },
+        {
+          "name": "Add Thread",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "body", "value": "Sudah diinstall, mohon dicek.", "type": "text" },
+                { "key": "attachments", "type": "file", "src": "" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/user/tickets/{{ticket_id}}/threads", "host": ["{{base_url}}"], "path": ["user", "tickets", "{{ticket_id}}", "threads"] }
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"closed\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/user/tickets/{{ticket_id}}/status", "host": ["{{base_url}}"], "path": ["user", "tickets", "{{ticket_id}}", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Tickets",
+      "item": [
+        {
+          "name": "List All Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/tickets?search=&status=&division_id=",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "tickets"],
+              "query": [
+                { "key": "search", "value": "", "description": "Filter by subject" },
+                { "key": "status", "value": "", "description": "Filter by status" },
+                { "key": "division_id", "value": "", "description": "Filter by division ID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Assign Ticket",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assigned_employee_id\": 5\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/tickets/{{ticket_id}}/assign", "host": ["{{base_url}}"], "path": ["admin", "tickets", "{{ticket_id}}", "assign"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employee - Tickets",
+      "item": [
+        {
+          "name": "List Assigned Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/employee/tickets?search=&status=&division_id=",
+              "host": ["{{base_url}}"],
+              "path": ["employee", "tickets"],
+              "query": [
+                { "key": "search", "value": "", "description": "Filter by subject" },
+                { "key": "status", "value": "", "description": "Filter by status" },
+                { "key": "division_id", "value": "", "description": "Filter by division ID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Thread",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "body", "value": "Sedang investigate, estimated 1 hour.", "type": "text" },
+                { "key": "attachments", "type": "file", "src": "" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/employee/tickets/{{ticket_id}}/threads", "host": ["{{base_url}}"], "path": ["employee", "tickets", "{{ticket_id}}", "threads"] }
+          }
+        },
+        {
+          "name": "Resolve Ticket",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/employee/tickets/{{ticket_id}}/status", "host": ["{{base_url}}"], "path": ["employee", "tickets", "{{ticket_id}}", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuperAdmin - Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/users", "host": ["{{base_url}}"], "path": ["superadmin", "users"] }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Employee\",\n  \"username\": \"newemployee\",\n  \"email\": \"newemployee@example.com\",\n  \"password\": \"password123\",\n  \"role_id\": 2,\n  \"division_id\": 2\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/users", "host": ["{{base_url}}"], "path": ["superadmin", "users"] }
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "users", "{{user_id}}"] }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "users", "{{user_id}}"] }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/superadmin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "users", "{{user_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuperAdmin - Roles",
+      "item": [
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/roles", "host": ["{{base_url}}"], "path": ["superadmin", "roles"] }
+          }
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Supervisor\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/roles", "host": ["{{base_url}}"], "path": ["superadmin", "roles"] }
+          }
+        },
+        {
+          "name": "Get Role",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/roles/{{role_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "roles", "{{role_id}}"] }
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Senior Supervisor\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/roles/{{role_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "roles", "{{role_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/superadmin/roles/{{role_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "roles", "{{role_id}}"] }
+          }
+        },
+        {
+          "name": "Sync Role Permissions",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permission_ids\": [1, 2]\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/roles/{{role_id}}/permissions", "host": ["{{base_url}}"], "path": ["superadmin", "roles", "{{role_id}}", "permissions"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuperAdmin - Divisions",
+      "item": [
+        {
+          "name": "List Divisions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/divisions", "host": ["{{base_url}}"], "path": ["superadmin", "divisions"] }
+          }
+        },
+        {
+          "name": "Create Division",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Finance\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/divisions", "host": ["{{base_url}}"], "path": ["superadmin", "divisions"] }
+          }
+        },
+        {
+          "name": "Get Division",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/divisions/{{division_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "divisions", "{{division_id}}"] }
+          }
+        },
+        {
+          "name": "Update Division",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Finance & Accounting\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/divisions/{{division_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "divisions", "{{division_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Division",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/superadmin/divisions/{{division_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "divisions", "{{division_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuperAdmin - Permissions",
+      "item": [
+        {
+          "name": "List Permissions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/permissions", "host": ["{{base_url}}"], "path": ["superadmin", "permissions"] }
+          }
+        },
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"view_reports\",\n  \"description\": \"Can view system reports\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/permissions", "host": ["{{base_url}}"], "path": ["superadmin", "permissions"] }
+          }
+        },
+        {
+          "name": "Get Permission",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/permissions/{{permission_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "permissions", "{{permission_id}}"] }
+          }
+        },
+        {
+          "name": "Update Permission",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"view_reports\",\n  \"description\": \"Can view and export system reports\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/permissions/{{permission_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "permissions", "{{permission_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Permission",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/superadmin/permissions/{{permission_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "permissions", "{{permission_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuperAdmin - Tickets",
+      "item": [
+        {
+          "name": "List All Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/superadmin/tickets?search=&status=&division_id=",
+              "host": ["{{base_url}}"],
+              "path": ["superadmin", "tickets"],
+              "query": [
+                { "key": "search", "value": "" },
+                { "key": "status", "value": "" },
+                { "key": "division_id", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Ticket (Master)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Network issue\",\n  \"description\": \"Jaringan lambat di lantai 3.\",\n  \"priority\": \"high\",\n  \"status\": \"open\",\n  \"created_by\": 1,\n  \"target_division_id\": 2\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/tickets", "host": ["{{base_url}}"], "path": ["superadmin", "tickets"] }
+          }
+        },
+        {
+          "name": "Get Ticket Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/superadmin/tickets/{{ticket_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "tickets", "{{ticket_id}}"] }
+          }
+        },
+        {
+          "name": "Update Ticket",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\",\n  \"priority\": \"urgent\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/superadmin/tickets/{{ticket_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "tickets", "{{ticket_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Ticket",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/superadmin/tickets/{{ticket_id}}", "host": ["{{base_url}}"], "path": ["superadmin", "tickets", "{{ticket_id}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

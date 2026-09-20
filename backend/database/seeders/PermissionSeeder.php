@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
@@ -64,7 +63,7 @@ class PermissionSeeder extends Seeder
                 'description' => 'Melihat riwayat aktivitas tiket.',
             ],
         ];
-        
+
         foreach ($permissions as $permission) {
             Permission::updateOrCreate(
                 [

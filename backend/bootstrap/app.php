@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Middleware\CheckPermission;
+use App\Http\Middleware\CheckRoleDivision;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use App\Http\Middleware\CheckPermission;
-use App\Http\Middleware\CheckRoleDivision;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(

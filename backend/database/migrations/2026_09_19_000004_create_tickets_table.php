@@ -43,7 +43,7 @@ return new class extends Migration
                 ->constrained('divisions')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
-            
+
             $table->foreignId('assigned_employee_id')
                 ->nullable()
                 ->constrained('users')

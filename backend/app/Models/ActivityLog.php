@@ -8,7 +8,7 @@ class ActivityLog extends Model
 {
     protected $connection = 'mongodb';
 
-    protected $collection = 'ticket_threads';
+    protected $collection = 'activity_logs';
 
     protected $fillable = [
         'ticket_id',

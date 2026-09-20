@@ -2,101 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\SyncRolePermissionsRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class PermissionController extends Controller
 {
-    public function index(): JsonResponse {
-        return response()->json(
-            Permission::with('roles')->get()
+    public function index(): JsonResponse
+    {
+        return $this->successResponse(
+            data: Permission::with('roles')->get(),
+            message: 'Permissions retrieved successfully.',
         );
     }
 
-    public function show(Permission $permission): JsonResponse {
-        return response()->json(
-            $permission->load('roles')
+    public function show(Permission $permission): JsonResponse
+    {
+        return $this->successResponse(
+            data: $permission->load('roles'),
+            message: 'Permission retrieved successfully.',
         );
     }
 
-    public function store(Request $request): JsonResponse {
-        $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:permissions,name',
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
-        ]);
+    public function store(StorePermissionRequest $request): JsonResponse
+    {
+        $data = $request->validated();
 
         $permission = Permission::create($data);
 
-        return response()->json([
-            'message' => 'Permission created successfully.',
-            'permission' => $permission,
-        ], 201);
+        return $this->successResponse(
+            data: $permission,
+            message: 'Permission created successfully.',
+            code: 201,
+        );
     }
 
-    public function update(Request $request, Permission $permission): JsonResponse {
-        $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('permissions', 'name')
-                    ->ignore($permission->id),
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
-        ]);
+    public function update(UpdatePermissionRequest $request, Permission $permission): JsonResponse
+    {
+        $data = $request->validated();
 
         $permission->update($data);
 
-        return response()->json([
-            'message' => 'Permission updated successfully.',
-            'permission' => $permission,
-        ]);
+        return $this->successResponse(
+            data: $permission,
+            message: 'Permission updated successfully.',
+        );
     }
 
-    public function destroy(Permission $permission): JsonResponse {
+    public function destroy(Permission $permission): JsonResponse
+    {
         $permission->delete();
 
-        return response()->json([
-            'message' => 'Permission deleted successfully.',
-        ]);
+        return $this->successResponse(message: 'Permission deleted successfully.');
     }
 
-    public function syncRolePermissions(Request $request, Role $role): JsonResponse {
-        $data = $request->validate([
-            'permission_ids' => [
-                'required',
-                'array',
-            ],
+    public function syncRolePermissions(SyncRolePermissionsRequest $request, Role $role): JsonResponse
+    {
+        $data = $request->validated();
 
-            'permission_ids.*' => [
-                'integer',
-                'exists:permissions,id',
-            ],
-        ]);
+        $role->permissions()->sync($data['permission_ids']);
 
-        $role->permissions()->sync(
-            $data['permission_ids']
+        return $this->successResponse(
+            data: $role->load('permissions'),
+            message: 'Role permissions updated successfully.',
         );
-
-        return response()->json([
-            'message' => 'Role permissions updated successfully.',
-            'role' => $role->load('permissions'),
-        ]);
     }
 }

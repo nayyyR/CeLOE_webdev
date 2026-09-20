@@ -3,12 +3,13 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class UpdatePermissionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     public function rules(): array
@@ -18,20 +19,12 @@ class RegisterRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
+                Rule::unique('permissions', 'name')
+                    ->ignore($this->route('permission')->id),
             ],
-
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
-
-            'password' => [
-                'required',
+            'description' => [
+                'nullable',
                 'string',
-                'min:8',
-                'confirmed',
             ],
         ];
     }

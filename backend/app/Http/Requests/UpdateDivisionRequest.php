@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class AssignTicketRequest extends FormRequest
+class UpdateDivisionRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,10 +15,12 @@ class AssignTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assigned_employee_id' => [
+            'name' => [
                 'required',
-                'integer',
-                Rule::exists(User::class, 'id'),
+                'string',
+                'max:255',
+                Rule::unique('divisions', 'name')
+                    ->ignore($this->route('division')->id),
             ],
         ];
     }
