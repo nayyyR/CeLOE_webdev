@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-celoe-50: #fef2f2;
+  --color-celoe-100: #fee2e2;
+  --color-celoe-200: #fecaca;
+  --color-celoe-500: #ED1A24;
+  --color-celoe-600: #d4151e;
+  --color-celoe-700: #b21119;
+  --color-celoe-800: #8b0e14;
+  --color-celoe-900: #6b0b10;
+}
