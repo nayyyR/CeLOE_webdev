@@ -49,5 +49,11 @@
                 </tbody>
             </table>
         </div>
+
+        @if ($divisions->hasPages())
+            <div class="border-t border-gray-200 px-6 py-3">
+                {{ $divisions->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.app>

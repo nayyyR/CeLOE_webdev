@@ -35,13 +35,25 @@ class TicketController extends Controller
     {
         $ticket->load(['targetDivision', 'creator', 'assignedEmployee']);
 
+        $threadLimit = 100;
+
         $threads = TicketThread::where('ticket_id', $ticket->id)
-            ->orderBy('created_at')
+            ->orderByDesc('created_at')
+            ->limit($threadLimit + 1)
             ->get();
+
+        $threadsTruncated = $threads->count() > $threadLimit;
+        $threads = $threads->take($threadLimit)->reverse()->values();
+
+        $activityLogLimit = 50;
 
         $activityLogs = ActivityLog::where('ticket_id', $ticket->id)
             ->orderByDesc('created_at')
+            ->limit($activityLogLimit + 1)
             ->get();
+
+        $activityLogsTruncated = $activityLogs->count() > $activityLogLimit;
+        $activityLogs = $activityLogs->take($activityLogLimit)->values();
 
         $userIds = $threads->pluck('user_id')
             ->merge($activityLogs->pluck('user_id'))
@@ -69,7 +81,7 @@ class TicketController extends Controller
             ])
             ->get();
 
-        return view('superadmin.tickets.show', compact('ticket', 'threads', 'activityLogs', 'users', 'employees'));
+        return view('superadmin.tickets.show', compact('ticket', 'threads', 'threadsTruncated', 'threadLimit', 'activityLogs', 'activityLogsTruncated', 'activityLogLimit', 'users', 'employees'));
     }
 
     public function assign(Ticket $ticket, AssignTicketRequest $request): RedirectResponse

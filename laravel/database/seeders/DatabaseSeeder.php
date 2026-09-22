@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Division;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,5 +24,27 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             TicketSeeder::class,
         ]);
+
+        // Reset the ticketing domain data, then generate exactly 100 dummy
+        // records for divisions, users, and tickets using factories.
+        Ticket::query()->delete();
+
+        User::query()
+            ->whereNotIn('username', [
+                'superadmin',
+                'admin',
+                'employee_it',
+                'employee_akademik',
+                'user',
+            ])
+            ->delete();
+
+        Division::factory()->count(100)->create();
+
+        User::factory()->count(100)->create();
+
+        Ticket::factory()->count(100)->create();
+
+        $this->command?->info('Generated: 100 divisions, 100 users, 100 tickets.');
     }
 }

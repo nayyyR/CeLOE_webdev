@@ -1,6 +1,7 @@
 <x-layouts.app :title="'Users - Celoe'">
     @php
         $divisionsJson = $divisions->map(fn($d) => ['id' => $d->id, 'name' => $d->name])->toJson();
+        $rolesJson = $roles->map(fn($r) => ['id' => $r->id, 'name' => $r->name])->toJson();
     @endphp
 
     <div class="mb-8 flex items-center justify-between">
@@ -80,11 +81,13 @@
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('superadmin.users.show', $user) }}" class="rounded-md bg-white px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors">View</a>
                                     <a href="{{ route('superadmin.users.edit', $user) }}" class="rounded-md bg-white px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors">Edit</a>
-                                    <form method="POST" action="{{ route('superadmin.users.destroy', $user) }}" onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 border border-red-200 hover:bg-red-100 transition-colors">Delete</button>
-                                    </form>
+                                    @if ($user->id !== auth()->id())
+                                        <form method="POST" action="{{ route('superadmin.users.destroy', $user) }}" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 border border-red-200 hover:bg-red-100 transition-colors">Delete</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -108,42 +111,89 @@
     <script>
         (function() {
             const allDivisions = {!! $divisionsJson !!};
-            const currentRoleId = '{{ request("role_id") }}';
-            const currentDivisionId = '{{ request("division_id") }}';
+            const allRoles = {!! $rolesJson !!};
             const roleSelect = document.querySelector('select[name="role_id"]');
             const divisionSelect = document.querySelector('select[name="division_id"]');
+            let currentRoleId = '{{ request("role_id") }}';
+            let currentDivisionId = '{{ request("division_id") }}';
 
-            function getAllowedDivisions(roleName) {
-                if (roleName === 'user' || roleName === 'admin' || roleName === 'super admin') {
-                    return allDivisions.filter(d => d.name.toLowerCase() === 'general');
-                }
-                if (roleName === 'employee') {
-                    return allDivisions.filter(d => d.name.toLowerCase() !== 'general');
-                }
-                return allDivisions;
+            const GENERAL_ROLES = ['user', 'admin', 'super admin'];
+
+            function isGeneralDivision(divisionId) {
+                const division = allDivisions.find(d => d.id == divisionId);
+                return division ? division.name.toLowerCase() === 'general' : false;
             }
 
-            function updateDivisions() {
-                const roleOption = roleSelect.options[roleSelect.selectedIndex];
-                const roleName = roleOption ? roleOption.text.toLowerCase() : '';
+            function getAllowedDivisionIds(roleName) {
+                if (roleName === 'employee') {
+                    return allDivisions.filter(d => d.name.toLowerCase() !== 'general').map(d => d.id);
+                }
+                if (GENERAL_ROLES.includes(roleName)) {
+                    return allDivisions.filter(d => d.name.toLowerCase() === 'general').map(d => d.id);
+                }
+                return allDivisions.map(d => d.id);
+            }
 
-                const allowed = getAllowedDivisions(roleName);
+            function getAllowedRoleIds(divisionId) {
+                if (divisionId === '') {
+                    return allRoles.map(r => r.id);
+                }
+                return allRoles
+                    .filter(r => isGeneralDivision(divisionId)
+                        ? GENERAL_ROLES.includes(r.name.toLowerCase())
+                        : r.name.toLowerCase() === 'employee')
+                    .map(r => r.id);
+            }
+
+            function populateDivisions() {
+                const roleName = currentRoleId
+                    ? (allRoles.find(r => r.id == currentRoleId)?.name || '').toLowerCase()
+                    : '';
+                const allowed = getAllowedDivisionIds(roleName);
 
                 divisionSelect.innerHTML = '<option value="">All Divisions</option>';
-                allowed.forEach(function(d) {
-                    const opt = document.createElement('option');
-                    opt.value = d.id;
-                    opt.textContent = d.name;
-                    divisionSelect.appendChild(opt);
+                allDivisions.forEach(d => {
+                    if (allowed.includes(Number(d.id))) {
+                        const opt = document.createElement('option');
+                        opt.value = d.id;
+                        opt.textContent = d.name;
+                        divisionSelect.appendChild(opt);
+                    }
                 });
 
-                if (currentDivisionId && allowed.some(d => d.id == currentDivisionId)) {
-                    divisionSelect.value = currentDivisionId;
-                }
+                divisionSelect.value = currentDivisionId && allowed.includes(Number(currentDivisionId)) ? currentDivisionId : '';
+                currentDivisionId = divisionSelect.value;
             }
 
-            roleSelect.addEventListener('change', updateDivisions);
-            updateDivisions();
+            function populateRoles() {
+                const allowed = getAllowedRoleIds(currentDivisionId);
+
+                roleSelect.innerHTML = '<option value="">All Roles</option>';
+                allRoles.forEach(r => {
+                    if (allowed.includes(Number(r.id))) {
+                        const opt = document.createElement('option');
+                        opt.value = r.id;
+                        opt.textContent = r.name;
+                        roleSelect.appendChild(opt);
+                    }
+                });
+
+                roleSelect.value = currentRoleId && allowed.includes(Number(currentRoleId)) ? currentRoleId : '';
+                currentRoleId = roleSelect.value;
+            }
+
+            roleSelect.addEventListener('change', () => {
+                currentRoleId = roleSelect.value;
+                populateDivisions();
+            });
+
+            divisionSelect.addEventListener('change', () => {
+                currentDivisionId = divisionSelect.value;
+                populateRoles();
+            });
+
+            populateDivisions();
+            populateRoles();
         })();
     </script>
 </x-layouts.app>

@@ -1,5 +1,5 @@
-<x-layouts.app :title="'Log in - Celoe'">
-    <div class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
+<x-layouts.app :title="'Log in - Celoe'" :showGuestNav="false">
+    <div class="flex min-h-screen items-center justify-center px-4 py-12">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
                 <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600">

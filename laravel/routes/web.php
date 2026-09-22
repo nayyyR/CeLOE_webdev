@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Admin\TicketController as AdminTicketController;
+use App\Http\Controllers\Web\AttachmentController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\Employee\TicketController as EmployeeTicketController;
@@ -56,6 +57,13 @@ Route::middleware('auth')->name('profile.')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('update');
     Route::get('/profile/password', [ProfileController::class, 'editPassword'])->name('password.edit');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
+
+// Attachment delivery (auth-protected; streams from storage, no public symlink dependency)
+Route::middleware('auth')->group(function () {
+    Route::get('/tickets/{ticket}/attachments/{path}', [AttachmentController::class, 'show'])
+        ->where('path', '.*')
+        ->name('tickets.attachments.show');
 });
 
 /*

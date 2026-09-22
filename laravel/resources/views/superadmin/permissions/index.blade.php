@@ -33,5 +33,11 @@
                 </tbody>
             </table>
         </div>
+
+        @if ($permissions->hasPages())
+            <div class="border-t border-gray-200 px-6 py-3">
+                {{ $permissions->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.app>

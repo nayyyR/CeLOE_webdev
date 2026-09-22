@@ -24,14 +24,28 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $role = Role::query()->inRandomOrder()->first();
+
+        $divisionId = Division::query()
+            ->when(
+                in_array(strtolower($role->name), ['user', 'admin', 'super admin'], true),
+                fn ($query) => $query->where('name', 'general')
+            )
+            ->when(
+                strtolower($role->name) === 'employee',
+                fn ($query) => $query->where('name', '!=', 'general')
+            )
+            ->inRandomOrder()
+            ->value('id');
+
         return [
             'name' => fake()->name(),
             'username' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => 'password',
-            'role_id' => Role::query()->inRandomOrder()->value('id'),
-            'division_id' => Division::query()->inRandomOrder()->value('id'),
+            'role_id' => $role->id,
+            'division_id' => $divisionId,
             'remember_token' => null,
         ];
     }

@@ -9,6 +9,7 @@ use App\Models\Division;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
@@ -92,6 +93,11 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
+        if ($user->id === Auth::id()) {
+            return redirect()->route('superadmin.users.index')
+                ->with('error', 'You cannot delete your own account.');
+        }
+
         $user->delete();
 
         return redirect()->route('superadmin.users.index')->with('success', 'User deleted successfully.');

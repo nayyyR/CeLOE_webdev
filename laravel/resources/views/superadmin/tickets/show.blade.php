@@ -13,9 +13,16 @@
             {{-- Threads --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                    <h2 class="text-sm font-semibold text-gray-900">Conversation</h2>
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-sm font-semibold text-gray-900">Conversation</h2>
+                        @if ($threadsTruncated)
+                            <span class="shrink-0 text-xs text-gray-500">Showing the latest {{ $threadLimit }} messages</span>
+                        @elseif ($threads->isNotEmpty())
+                            <span class="shrink-0 text-xs text-gray-500">{{ $threads->count() }} {{ $threads->count() === 1 ? 'message' : 'messages' }}</span>
+                        @endif
+                    </div>
                 </div>
-                <div class="divide-y divide-gray-100">
+                <div id="conversation-history" class="max-h-[65vh] overflow-y-auto overscroll-contain divide-y divide-gray-100">
                     @forelse ($threads as $thread)
                         <div class="px-6 py-4">
                             <div class="flex items-center gap-3 mb-2">
@@ -27,11 +34,11 @@
                                     <span class="ml-2 text-xs text-gray-500">{{ $thread->created_at->format('d M Y, H:i') }}</span>
                                 </div>
                             </div>
-                            <div class="ml-11 text-sm text-gray-700 whitespace-pre-wrap">{{ $thread->body }}</div>
+                            <div class="ml-11 text-sm text-gray-700 whitespace-pre-wrap break-words">{{ $thread->body }}</div>
                             @if (!empty($thread->attachments))
                                 <div class="ml-11 mt-2 flex flex-wrap gap-2">
                                     @foreach ($thread->attachments as $attachment)
-                                        <a href="{{ Storage::disk($attachment['disk'])->url($attachment['path']) }}" target="_blank"
+                                        <a href="{{ route('tickets.attachments.show', [$ticket, $attachment['path']]) }}" target="_blank"
                                             class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 transition-colors">
                                             <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" /></svg>
                                             {{ $attachment['original_name'] }}
@@ -192,10 +199,17 @@
             {{-- Activity Log --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                    <h2 class="text-sm font-semibold text-gray-900">Activity Log</h2>
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-sm font-semibold text-gray-900">Activity Log</h2>
+                        @if ($activityLogsTruncated)
+                            <span class="shrink-0 text-xs text-gray-500">Showing the latest {{ $activityLogLimit }} entries</span>
+                        @elseif ($activityLogs->isNotEmpty())
+                            <span class="shrink-0 text-xs text-gray-500">{{ $activityLogs->count() }} {{ $activityLogs->count() === 1 ? 'entry' : 'entries' }}</span>
+                        @endif
+                    </div>
                 </div>
                 <div class="p-6">
-                    <div class="space-y-3">
+                    <div class="max-h-[40vh] overflow-y-auto overscroll-contain space-y-3">
                         @forelse ($activityLogs as $log)
                             <div class="flex items-start gap-3">
                                 <div class="mt-1 h-2 w-2 shrink-0 rounded-full bg-indigo-400"></div>
@@ -218,4 +232,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            var el = document.getElementById('conversation-history');
+            if (el) el.scrollTop = el.scrollHeight;
+        })();
+    </script>
 </x-layouts.app>

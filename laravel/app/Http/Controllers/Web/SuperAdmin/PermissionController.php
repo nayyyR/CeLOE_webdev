@@ -10,7 +10,7 @@ class PermissionController extends Controller
 {
     public function index(): View
     {
-        $permissions = Permission::withCount('roles')->latest()->get();
+        $permissions = Permission::withCount('roles')->latest()->paginate(10);
 
         return view('superadmin.permissions.index', compact('permissions'));
     }

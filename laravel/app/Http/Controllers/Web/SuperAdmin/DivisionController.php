@@ -17,7 +17,7 @@ class DivisionController extends Controller
 {
     public function index(): View
     {
-        $divisions = Division::withCount(['users', 'tickets'])->latest()->get();
+        $divisions = Division::withCount(['users', 'tickets'])->latest()->paginate(10);
 
         return view('superadmin.divisions.index', compact('divisions'));
     }
