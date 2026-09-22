@@ -92,21 +92,16 @@ const userStats = computed(() => {
 
 <template>
   <div class="p-6 max-w-4xl mx-auto space-y-6">
-    <!-- 1. Profile header card — Twitter/X style -->
     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
-      <!-- Banner -->
       <div class="relative h-48 bg-gradient-to-br from-celoe-500 via-celoe-600 to-celoe-800">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyem0wLTRWMjhIMjR2Mmgxem0tNC0ydi0ySDE4djJoMnptNCAydjJIMjJ2LTJoNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
       </div>
 
-      <!-- Avatar + actions row -->
       <div class="px-6 relative">
-        <!-- Avatar: circular, overlaps banner -->
         <div class="-mt-16 mb-4 flex items-end justify-between">
           <div class="w-32 h-32 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center shrink-0">
             <span class="text-3xl font-bold text-celoe-600">{{ getInitials(store.currentUser.name) }}</span>
           </div>
-          <!-- Logout button: top-right of this row -->
           <button
             class="mb-2 flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-red-600 bg-white border border-red-200 rounded-full hover:bg-red-50 transition-colors shrink-0"
             @click="handleLogout"
@@ -118,7 +113,6 @@ const userStats = computed(() => {
           </button>
         </div>
 
-        <!-- User info on solid background -->
         <div class="mb-5">
           <h2 class="text-xl font-bold text-zinc-900">{{ store.currentUser.name }}</h2>
           <p class="text-[14px] text-zinc-400 mt-0.5">@{{ store.currentUser.username }}</p>
@@ -132,7 +126,6 @@ const userStats = computed(() => {
           </div>
         </div>
 
-        <!-- Stats row -->
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2 pb-5 border-b border-zinc-100">
           <div v-for="stat in userStats" :key="stat.label" class="flex items-baseline gap-1.5">
             <span class="text-[15px] font-bold text-zinc-900 tabular-nums">{{ stat.value() }}</span>
@@ -142,7 +135,6 @@ const userStats = computed(() => {
       </div>
     </div>
 
-    <!-- 2. Account Information -->
     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
       <div class="px-6 py-4 border-b border-zinc-100">
         <h3 class="text-[14px] font-semibold text-zinc-900">Account Information</h3>
@@ -171,9 +163,7 @@ const userStats = computed(() => {
       </div>
     </div>
 
-    <!-- 3. Forms side by side -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Profile Details form -->
       <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
         <div class="px-6 py-4 border-b border-zinc-100">
           <h3 class="text-[14px] font-semibold text-zinc-900">Profile Details</h3>
@@ -248,7 +238,6 @@ const userStats = computed(() => {
         </div>
       </div>
 
-      <!-- Change Password form -->
       <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
         <div class="px-6 py-4 border-b border-zinc-100">
           <h3 class="text-[14px] font-semibold text-zinc-900">Change Password</h3>

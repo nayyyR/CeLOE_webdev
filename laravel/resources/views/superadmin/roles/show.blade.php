@@ -10,7 +10,6 @@
     </div>
 
     <div class="max-w-2xl space-y-6">
-        {{-- Role Info --}}
         <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">Role Information</h2>
@@ -21,7 +20,6 @@
             </div>
         </div>
 
-        {{-- Assigned Permissions (read-only) --}}
         <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">Assigned Permissions</h2>

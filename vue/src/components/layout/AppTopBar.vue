@@ -36,9 +36,7 @@ function clearFilters() {
 <template>
   <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-zinc-200">
     <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-      <!-- Left: Title + mobile menu -->
       <div class="flex items-center gap-3">
-        <!-- Mobile hamburger -->
         <button
           class="md:hidden p-2 -ml-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors"
           @click="emit('toggle-mobile-menu')"
@@ -53,9 +51,7 @@ function clearFilters() {
         </div>
       </div>
 
-      <!-- Right: Filters (only on tickets page) -->
       <div v-if="isTicketPage" class="flex items-center gap-2">
-        <!-- Clear filters -->
         <button
           v-if="hasActiveFilters"
           class="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-zinc-500 bg-zinc-50 border border-zinc-200 rounded-lg hover:bg-zinc-100 transition-colors"

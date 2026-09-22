@@ -14,12 +14,10 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="min-h-screen bg-zinc-50">
-    <!-- Desktop sidebar -->
     <div class="hidden md:block fixed inset-y-0 left-0 w-60 z-30">
       <AppSidebar />
     </div>
 
-    <!-- Mobile sidebar overlay -->
     <div
       v-if="mobileMenuOpen"
       class="fixed inset-0 z-40 bg-zinc-900/20 backdrop-blur-sm md:hidden"
@@ -41,7 +39,6 @@ watch(() => route.fullPath, () => {
       </div>
     </transition>
 
-    <!-- Main content -->
     <div class="md:pl-60 flex flex-col min-h-screen">
       <AppTopBar @toggle-mobile-menu="mobileMenuOpen = !mobileMenuOpen" />
       <main class="flex-1 overflow-hidden">

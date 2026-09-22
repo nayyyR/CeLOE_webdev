@@ -15,7 +15,6 @@
                 @csrf
                 @method('PUT')
 
-                {{-- Name --}}
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
                     <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required autofocus
@@ -23,7 +22,6 @@
                     @error('name') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Username --}}
                 <div>
                     <label for="username" class="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
                     <input id="username" name="username" type="text" value="{{ old('username', $user->username) }}" required
@@ -31,7 +29,6 @@
                     @error('username') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Email --}}
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
                     <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required
@@ -39,7 +36,6 @@
                     @error('email') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Password --}}
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password <span class="text-gray-400">(leave blank to keep current)</span></label>
                     <input id="password" name="password" type="password"
@@ -47,7 +43,6 @@
                     @error('password') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Role --}}
                 <div>
                     <label for="role_id" class="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
                     <select id="role_id" name="role_id" required
@@ -59,7 +54,6 @@
                     @error('role_id') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Division --}}
                 <div>
                     <label for="division_id" class="block text-sm font-medium text-gray-700 mb-1.5">Division</label>
                     <select id="division_id" name="division_id" required
@@ -68,7 +62,6 @@
                     @error('division_id') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Actions --}}
                 <div class="flex items-center gap-3 pt-2">
                     <button type="submit" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors">Update User</button>
                     <a href="{{ route('superadmin.users.show', $user) }}" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>

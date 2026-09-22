@@ -9,7 +9,6 @@
             <form method="POST" action="{{ route('user.tickets.store') }}" enctype="multipart/form-data" class="space-y-5">
                 @csrf
 
-                {{-- Subject --}}
                 <div>
                     <label for="subject" class="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
                     <input id="subject" name="subject" type="text" value="{{ old('subject') }}" required autofocus
@@ -17,7 +16,6 @@
                     @error('subject') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Target Division --}}
                 <div>
                     <label for="target_division_id" class="block text-sm font-medium text-gray-700 mb-1.5">Target Division</label>
                     <select id="target_division_id" name="target_division_id" required
@@ -30,7 +28,6 @@
                     @error('target_division_id') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Description --}}
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
                     <textarea id="description" name="description" rows="5" required
@@ -38,7 +35,6 @@
                     @error('description') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Attachments --}}
                 <div>
                     <label for="attachments" class="block text-sm font-medium text-gray-700 mb-1.5">Attachments <span class="text-gray-400">(optional, max 5 files, 2MB each)</span></label>
                     <input id="attachments" name="attachments[]" type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx"
@@ -47,7 +43,6 @@
                     @error('attachments.*') <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Actions --}}
                 <div class="flex items-center gap-3 pt-2">
                     <button type="submit" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors">Submit Ticket</button>
                     <a href="{{ route('user.tickets.index') }}" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>

@@ -92,14 +92,6 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    /**
-     * Enforce strict RBAC Matrix:
-     *   1a. User       + General    => allowed
-     *   1b. Employee   + Non-General => allowed
-     *   1c. Admin      + General    => allowed
-     *   1d. Super Admin + General   => allowed
-     *   1e. Any other combination   => blocked
-     */
     private function isValidRoleDivisionPair(User $user): bool
     {
         $roleName = strtolower($user->role->name ?? '');

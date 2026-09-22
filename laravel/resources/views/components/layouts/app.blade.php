@@ -11,27 +11,19 @@
 <body class="h-full font-sans antialiased">
 
     @auth
-        {{-- ============================================================ --}}
- {{-- AUTHENTICATED LAYOUT: Sidebar + Topbar + Content                --}}
- {{-- ============================================================ --}}
         <div class="min-h-full">
-            {{-- Sidebar (desktop) --}}
             <div class="hidden lg:block">
                 <x-sidebar />
             </div>
 
-            {{-- Mobile sidebar overlay --}}
             <div id="sidebar-overlay" class="lg:hidden hidden fixed inset-0 z-40 bg-gray-900/80" onclick="document.getElementById('sidebar-mobile').classList.add('hidden'); this.classList.add('hidden')"></div>
 
-            {{-- Mobile sidebar --}}
             <div id="sidebar-mobile" class="lg:hidden hidden fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 overflow-y-auto">
                 <x-sidebar />
             </div>
 
-            {{-- Topbar --}}
             <x-topbar />
 
-            {{-- Flash Messages --}}
             @if (session('success'))
                 <div class="px-4 pt-4 sm:px-6 lg:pl-72">
                     <div class="rounded-md bg-green-50 p-4 border border-green-200">
@@ -48,7 +40,6 @@
                 </div>
             @endif
 
-            {{-- Main Content --}}
             <main class="lg:pl-64">
                 <div class="px-4 py-6 sm:px-6 lg:px-8">
                     {{ $slot }}
@@ -56,11 +47,7 @@
             </main>
         </div>
     @else
-        {{-- ============================================================ --}}
- {{-- GUEST LAYOUT: Simple centered auth pages                       --}}
- {{-- ============================================================ --}}
         <div class="min-h-full">
-            {{-- Top Navigation Bar --}}
             @if ($showGuestNav ?? true)
             <nav class="bg-white shadow-sm border-b border-gray-200">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -84,7 +71,6 @@
             </nav>
             @endif
 
-            {{-- Flash Messages --}}
             @if (session('success'))
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
                     <div class="rounded-md bg-green-50 p-4 border border-green-200">

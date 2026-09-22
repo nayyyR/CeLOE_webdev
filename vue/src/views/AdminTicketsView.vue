@@ -120,7 +120,6 @@ const availableEmployees = computed(() => {
 
 <template>
   <div class="p-6">
-    <!-- Summary row -->
     <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-6">
       <div class="bg-white rounded-xl border border-zinc-200 p-4">
         <p class="text-2xl font-semibold text-zinc-900 tabular-nums">{{ store.ticketStats.total }}</p>
@@ -144,7 +143,6 @@ const availableEmployees = computed(() => {
       </div>
     </div>
 
-    <!-- Filters bar -->
     <div class="flex flex-wrap items-center gap-2 mb-4">
       <button
         v-if="store.canCreateTickets"
@@ -190,7 +188,6 @@ const availableEmployees = computed(() => {
       </select>
     </div>
 
-    <!-- Ticket table -->
     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
       <div class="hidden lg:block overflow-x-auto">
         <table class="w-full">
@@ -277,7 +274,6 @@ const availableEmployees = computed(() => {
         </table>
       </div>
 
-      <!-- Mobile cards -->
       <div class="lg:hidden divide-y divide-zinc-100">
         <div
           v-for="ticket in paginatedTickets"
@@ -329,7 +325,6 @@ const availableEmployees = computed(() => {
         </div>
       </div>
 
-      <!-- Empty state -->
       <div v-if="sortedTickets.length === 0" class="flex flex-col items-center justify-center py-16">
         <svg class="w-10 h-10 text-zinc-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -338,7 +333,6 @@ const availableEmployees = computed(() => {
       </div>
     </div>
 
-    <!-- Pagination -->
     <AppPagination
       v-if="sortedTickets.length > 0"
       :current-page="currentPage"
@@ -347,7 +341,6 @@ const availableEmployees = computed(() => {
       @update:current-page="currentPage = $event"
     />
 
-    <!-- Assign Modal -->
     <Teleport to="body">
       <transition
         enter-active-class="transition-opacity duration-150 ease-out"
@@ -433,7 +426,6 @@ const availableEmployees = computed(() => {
       </transition>
     </Teleport>
 
-    <!-- Status Modal -->
     <Teleport to="body">
       <transition
         enter-active-class="transition-opacity duration-150 ease-out"
@@ -501,7 +493,6 @@ const availableEmployees = computed(() => {
       </transition>
     </Teleport>
 
-    <!-- Create Ticket Modal -->
     <Teleport to="body">
       <transition
         enter-active-class="transition-opacity duration-150 ease-out"

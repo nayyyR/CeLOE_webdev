@@ -8,9 +8,7 @@
     </div>
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {{-- Main Content: Threads --}}
         <div class="lg:col-span-2 space-y-6">
-            {{-- Threads --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                     <div class="flex items-center justify-between gap-4">
@@ -53,7 +51,6 @@
                 </div>
             </div>
 
-            {{-- Reply Form (only if ticket is not closed) --}}
             @if ($ticket->status !== 'closed')
                 <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                     <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
@@ -79,9 +76,7 @@
             @endif
         </div>
 
-        {{-- Sidebar --}}
         <div class="space-y-6">
-            {{-- Status --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                     <h2 class="text-sm font-semibold text-gray-900">Status</h2>
@@ -99,7 +94,6 @@
                         @endif
                     </div>
 
-                    {{-- Employee can only resolve in_progress tickets --}}
                     @if ($ticket->status === 'in_progress')
                         <form method="POST" action="{{ route('employee.tickets.status', $ticket) }}">
                             @csrf
@@ -113,7 +107,6 @@
                 </div>
             </div>
 
-            {{-- Details --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                     <h2 class="text-sm font-semibold text-gray-900">Details</h2>
@@ -142,7 +135,6 @@
                 </div>
             </div>
 
-            {{-- Activity Log --}}
             <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                     <div class="flex items-center justify-between gap-4">

@@ -3,7 +3,6 @@
 @endphp
 
 <header class="sticky top-0 z-40 flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:px-6 lg:pl-72">
-    {{-- Mobile menu button --}}
     <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" onclick="document.getElementById('sidebar-mobile').classList.toggle('hidden'); document.getElementById('sidebar-overlay').classList.toggle('hidden')">
         <span class="sr-only">Open sidebar</span>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -14,14 +13,12 @@
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <div class="flex flex-1"></div>
         <div class="flex items-center gap-x-4 lg:gap-x-6">
-            {{-- Role Badge --}}
             <span class="hidden sm:inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
                 {{ $user->role->name ?? 'Unknown' }}
             </span>
 
             <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true"></div>
 
-            {{-- User Info --}}
             <div class="flex items-center gap-x-4">
                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-x-3 rounded-lg px-2 py-1 -ml-2 hover:bg-gray-50 transition-colors" title="My Profile">
                     <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50 ring-1 ring-inset ring-indigo-700/10">
@@ -35,7 +32,6 @@
 
                 <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true"></div>
 
-                {{-- Logout --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors">

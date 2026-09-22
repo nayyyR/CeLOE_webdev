@@ -15,22 +15,11 @@ use App\Http\Controllers\Web\User\TicketController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Session-based (auth:web) routes for the Blade + Tailwind UI.
-|
-*/
-
-// Public: Login / Register
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('guest');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('guest');
 
-// Root → redirect based on auth state
 Route::get('/', function () {
     if (Auth::check()) {
         $user = Auth::user();
@@ -49,7 +38,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
 
-// Authenticated: Logout + Profile
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware('auth')->name('profile.')->group(function () {
@@ -59,28 +47,15 @@ Route::middleware('auth')->name('profile.')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });
 
-// Attachment delivery (auth-protected; streams from storage, no public symlink dependency)
 Route::middleware('auth')->group(function () {
     Route::get('/tickets/{ticket}/attachments/{path}', [AttachmentController::class, 'show'])
         ->where('path', '.*')
         ->name('tickets.attachments.show');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Role-Based Dashboard Routes
-|--------------------------------------------------------------------------
-|
-| Each role group uses: auth + role.division middleware.
-| The role.division middleware enforces the strict RBAC matrix (1a-1e).
-|
-*/
-
-// User Dashboard + Tickets
 Route::prefix('user')->middleware(['auth', 'role.division', 'role:user'])->name('user.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    // Ticket CRUD
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
     Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
@@ -89,22 +64,18 @@ Route::prefix('user')->middleware(['auth', 'role.division', 'role:user'])->name(
     Route::put('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
-// Employee Dashboard + Assigned Tickets
 Route::prefix('employee')->middleware(['auth', 'role.division', 'role:employee'])->name('employee.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    // Assigned Tickets
     Route::get('/tickets', [EmployeeTicketController::class, 'index'])->name('tickets.assigned');
     Route::get('/tickets/{ticket}', [EmployeeTicketController::class, 'show'])->name('tickets.show');
     Route::post('/tickets/{ticket}/replies', [EmployeeTicketController::class, 'addThread'])->name('tickets.reply');
     Route::put('/tickets/{ticket}/status', [EmployeeTicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
-// Admin Dashboard + All Tickets
 Route::prefix('admin')->middleware(['auth', 'role.division', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    // All Tickets
     Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('tickets.show');
     Route::post('/tickets/{ticket}/assign', [AdminTicketController::class, 'assign'])->name('tickets.assign');
@@ -112,11 +83,9 @@ Route::prefix('admin')->middleware(['auth', 'role.division', 'role:admin'])->nam
     Route::put('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus'])->name('tickets.status');
 });
 
-// Super Admin Dashboard + Management
 Route::prefix('super-admin')->middleware(['auth', 'role.division', 'role:super admin'])->name('superadmin.')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    // User CRUD
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -125,11 +94,9 @@ Route::prefix('super-admin')->middleware(['auth', 'role.division', 'role:super a
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    // Role (read-only)
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
 
-    // Division CRUD
     Route::get('/divisions', [DivisionController::class, 'index'])->name('divisions.index');
     Route::get('/divisions/create', [DivisionController::class, 'create'])->name('divisions.create');
     Route::post('/divisions', [DivisionController::class, 'store'])->name('divisions.store');
@@ -138,11 +105,9 @@ Route::prefix('super-admin')->middleware(['auth', 'role.division', 'role:super a
     Route::put('/divisions/{division}', [DivisionController::class, 'update'])->name('divisions.update');
     Route::delete('/divisions/{division}', [DivisionController::class, 'destroy'])->name('divisions.destroy');
 
-    // Permission (read-only)
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
 
-    // Tickets
     Route::get('/tickets', [SuperAdminTicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [SuperAdminTicketController::class, 'show'])->name('tickets.show');
     Route::post('/tickets/{ticket}/assign', [SuperAdminTicketController::class, 'assign'])->name('tickets.assign');

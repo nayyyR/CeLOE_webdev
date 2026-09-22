@@ -30,7 +30,6 @@ function formatTime(dateString) {
 
 <template>
   <div class="p-6">
-    <!-- Summary cards -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
       <div class="bg-white rounded-xl border border-zinc-200 p-4">
         <p class="text-2xl font-semibold text-zinc-900 tabular-nums">{{ store.activityLogs.length }}</p>
@@ -50,14 +49,12 @@ function formatTime(dateString) {
       </div>
     </div>
 
-    <!-- Activity table -->
     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
       <div class="px-5 py-4 border-b border-zinc-100">
         <h2 class="text-[14px] font-semibold text-zinc-900">Recent Activity</h2>
         <p class="text-[12px] text-zinc-400 mt-0.5">All actions across tickets</p>
       </div>
 
-      <!-- Desktop table -->
       <div class="hidden sm:block overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -107,7 +104,6 @@ function formatTime(dateString) {
         </table>
       </div>
 
-      <!-- Mobile list -->
       <div class="sm:hidden divide-y divide-zinc-100">
         <div
           v-for="log in sortedLogs"
@@ -131,7 +127,6 @@ function formatTime(dateString) {
       </div>
     </div>
 
-    <!-- Pagination -->
     <AppPagination
       v-if="sortedLogs.length > 0"
       :current-page="currentPage"

@@ -222,7 +222,6 @@ function actionBadgeColor(action) {
 
 <template>
   <div class="p-6 space-y-6">
-    <!-- Metric cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <div
         v-for="metric in metrics"
@@ -242,7 +241,6 @@ function actionBadgeColor(action) {
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Line chart -->
       <div class="lg:col-span-2 bg-white rounded-xl border border-zinc-200 p-5">
         <div class="flex items-center justify-between mb-5">
           <div>
@@ -255,7 +253,6 @@ function actionBadgeColor(action) {
         </div>
       </div>
 
-      <!-- Recent activity -->
       <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
         <div class="px-5 py-4 border-b border-zinc-100">
           <h3 class="text-[14px] font-semibold text-zinc-900">Recent Activity</h3>
@@ -291,9 +288,7 @@ function actionBadgeColor(action) {
       </div>
     </div>
 
-    <!-- Charts row: Doughnut + Division Bar + Priority Bar -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Status Doughnut -->
       <div class="bg-white rounded-xl border border-zinc-200 p-5">
         <div class="mb-4">
           <h3 class="text-[14px] font-semibold text-zinc-900">Status Distribution</h3>
@@ -304,7 +299,6 @@ function actionBadgeColor(action) {
         </div>
       </div>
 
-      <!-- Division Bar -->
       <div class="bg-white rounded-xl border border-zinc-200 p-5">
         <div class="mb-4">
           <h3 class="text-[14px] font-semibold text-zinc-900">By Division</h3>
@@ -315,7 +309,6 @@ function actionBadgeColor(action) {
         </div>
       </div>
 
-      <!-- Priority Bar -->
       <div class="bg-white rounded-xl border border-zinc-200 p-5">
         <div class="mb-4">
           <h3 class="text-[14px] font-semibold text-zinc-900">By Priority</h3>

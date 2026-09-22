@@ -20,7 +20,6 @@
                 <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
                     @csrf
 
-                    {{-- Login (Email) --}}
                     <div>
                         <label for="login" class="block text-sm font-medium text-gray-700 mb-1.5">
                             Email address
@@ -41,7 +40,6 @@
                         @enderror
                     </div>
 
-                    {{-- Password --}}
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">
                             Password
@@ -60,7 +58,6 @@
                         @enderror
                     </div>
 
-                    {{-- Submit --}}
                     <button
                         type="submit"
                         class="flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"

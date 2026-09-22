@@ -15,7 +15,6 @@
         </a>
     </div>
 
-    {{-- Search & Filters --}}
     <div class="mb-6 rounded-xl bg-white p-4 shadow-sm border border-gray-200">
         <form method="GET" action="{{ route('superadmin.users.index') }}" class="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div class="flex-1">
@@ -43,7 +42,6 @@
         </form>
     </div>
 
-    {{-- Users Table --}}
     <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -100,7 +98,6 @@
             </table>
         </div>
 
-        {{-- Pagination --}}
         @if ($users->hasPages())
             <div class="border-t border-gray-200 px-6 py-3">
                 {{ $users->links() }}

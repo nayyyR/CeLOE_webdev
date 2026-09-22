@@ -53,7 +53,6 @@ function clearFilters() {
 
 <template>
   <div class="p-6">
-    <!-- Summary cards -->
     <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-6">
       <div class="bg-white rounded-xl border border-zinc-200 p-4">
         <p class="text-2xl font-semibold text-zinc-900 tabular-nums">{{ store.users.length }}</p>
@@ -77,7 +76,6 @@ function clearFilters() {
       </div>
     </div>
 
-    <!-- Filters bar -->
     <div class="flex flex-wrap items-center gap-2 mb-4">
       <div class="relative">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-300 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,14 +114,12 @@ function clearFilters() {
       </button>
     </div>
 
-    <!-- Users table -->
     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
       <div class="px-5 py-4 border-b border-zinc-100">
         <h2 class="text-[14px] font-semibold text-zinc-900">All Users</h2>
         <p class="text-[12px] text-zinc-400 mt-0.5">Team members, roles, and division assignments</p>
       </div>
 
-      <!-- Desktop table -->
       <div class="hidden sm:block overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -173,7 +169,6 @@ function clearFilters() {
         </table>
       </div>
 
-      <!-- Mobile list -->
       <div class="sm:hidden divide-y divide-zinc-100">
         <div
           v-for="user in paginatedUsers"
@@ -204,7 +199,6 @@ function clearFilters() {
         </div>
       </div>
 
-      <!-- Empty state -->
       <div v-if="sortedUsers.length === 0" class="flex flex-col items-center justify-center py-16">
         <svg class="w-10 h-10 text-zinc-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -213,7 +207,6 @@ function clearFilters() {
       </div>
     </div>
 
-    <!-- Pagination -->
     <AppPagination
       v-if="sortedUsers.length > 0"
       :current-page="currentPage"

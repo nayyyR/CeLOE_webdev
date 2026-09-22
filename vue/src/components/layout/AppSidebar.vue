@@ -20,7 +20,6 @@ function isActive(routeName) {
 <template>
   <aside class="flex w-60 flex-col bg-white border-r border-zinc-200 h-full">
     <div class="flex flex-col flex-1 min-h-0">
-      <!-- Brand -->
       <div class="flex items-center h-16 flex-shrink-0 px-5 border-b border-zinc-100">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-celoe-500 flex items-center justify-center">
@@ -30,7 +29,6 @@ function isActive(routeName) {
         </div>
       </div>
 
-      <!-- Main nav -->
       <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <RouterLink
           v-for="item in mainNavItems"
@@ -68,7 +66,6 @@ function isActive(routeName) {
         </RouterLink>
       </nav>
 
-      <!-- Profile pinned to bottom -->
       <div class="flex-shrink-0 border-t border-zinc-100 px-3 py-3">
         <RouterLink
           :to="{ name: bottomNavItem.routeName }"

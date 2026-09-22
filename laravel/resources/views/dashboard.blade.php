@@ -7,7 +7,6 @@
             </p>
         </div>
 
-        {{-- Info Card --}}
         <div class="rounded-xl bg-white p-6 shadow-sm border border-gray-200">
             <div class="flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-50">

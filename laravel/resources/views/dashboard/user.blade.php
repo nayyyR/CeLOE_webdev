@@ -4,7 +4,6 @@
         <p class="mt-1 text-sm text-gray-600">Welcome back, {{ auth()->user()->name }}.</p>
     </div>
 
-    {{-- Stats Grid --}}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-8">
         <div class="rounded-xl bg-white p-5 shadow-sm border border-gray-200">
             <div class="flex items-center gap-3">
@@ -67,7 +66,6 @@
         </div>
     </div>
 
-    {{-- Recent Tickets --}}
     <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
         <div class="border-b border-gray-200 bg-gray-50 px-6 py-4 flex items-center justify-between">
             <h2 class="text-sm font-semibold text-gray-900">Recent Tickets</h2>

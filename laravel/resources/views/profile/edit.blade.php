@@ -5,7 +5,6 @@
     </div>
 
     <div class="max-w-2xl space-y-6">
-        {{-- Profile Information --}}
         <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">Profile Information</h2>
@@ -43,7 +42,6 @@
             </form>
         </div>
 
-        {{-- Password --}}
         <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">Change Password</h2>
@@ -80,7 +78,6 @@
             </form>
         </div>
 
-        {{-- Account Info (read-only) --}}
         <div class="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">Account Information</h2>

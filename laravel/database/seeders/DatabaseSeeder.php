@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
             TicketSeeder::class,
         ]);
 
-        // Reset the ticketing domain data, then generate exactly 100 dummy
-        // records for divisions, users, and tickets using factories.
         Ticket::query()->delete();
 
         User::query()
